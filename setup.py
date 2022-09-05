@@ -16,6 +16,7 @@ requirements = [
     'jupyter',
     'pandas',
     'requests',
+    'matplotlib_inline',
 ]
 
 setup(
