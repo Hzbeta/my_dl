@@ -1,4 +1,4 @@
-import dl.file
-import dl.torch
-import dl.plt
-import dl.media
+from dl import file
+from dl import torch
+from dl import plt
+from dl import media
