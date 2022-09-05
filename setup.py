@@ -20,7 +20,8 @@ requirements = [
 
 setup(
     name='dl',
-    version='0.0.1',
+    setup_requires=['setuptools_scm'],
+    use_scm_version=True,
     python_requires='>=3.7',
     author='Hzbeta',
     author_email='ihzbeta@outlook.com',
