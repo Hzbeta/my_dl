@@ -17,6 +17,7 @@ requirements = [
     'pandas',
     'requests',
     'matplotlib_inline',
+    'rich',
 ]
 
 setup(

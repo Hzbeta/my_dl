@@ -8,6 +8,7 @@ import zipfile
 import toml
 import fire
 from tqdm import tqdm
+from rich import progress
 
 
 def get_vaild_filename(dir_path: str, file_ext: str) -> str:
@@ -33,14 +34,12 @@ def get_file_sha1(file_path: str) -> str:
         sha1值
     '''
     assert os.path.exists(file_path), '文件不存在'
-    sha1 = hashlib.sha1()
-    with open(file_path, 'rb') as f:
-        while True:
-            data = f.read(1048576)
-            if not data:
-                break
-            sha1.update(data)
-    return sha1.hexdigest()
+    print(f'计算{file_path}的sha1...')
+    with progress.open(file_path, 'rb') as f:
+        hash = hashlib.new('sha1')
+        for chunk in iter(lambda: f.read(2**20), b''):
+            hash.update(chunk)
+        return hash.hexdigest()
 
 
 def download_from_url(url, fname):
@@ -81,7 +80,7 @@ class Dataset():
         except KeyError as e:
             raise Exception(f'基础配置文件中缺少键值：{e}')
 
-    def download_extract(self, name: str, folder: str = None, re_extract: bool = False) -> str:
+    def download_extract(self, name: str,cache_hash_check=False, folder: str = None, re_extract: bool = False) -> str:
         """下载并解压zip/tar文件
             指定folder则返回指定子目录
         """
@@ -93,7 +92,7 @@ class Dataset():
             raise Exception(f'数据库配置文件中缺少键值：{e}')
         os.makedirs(cache_dir, exist_ok=True)
         file_full_path = os.path.join(cache_dir, url.split('/')[-1])
-        if os.path.exists(file_full_path) and get_file_sha1(file_full_path) == sha1_hash:
+        if os.path.exists(file_full_path) and (not cache_hash_check or get_file_sha1(file_full_path) == sha1_hash):
             pass  # 命中缓存
         else:
             print(f'正在从{url}下载到{file_full_path}...')
@@ -118,6 +117,9 @@ class Dataset():
                 fp.extract(member, extract_dir)
             # fp.extractall(extract_dir)
         return os.path.join(extract_dir, folder) if folder else extract_dir
+
+    def update(self,name: str, folder: str = None):
+        return self.download_extract(name, folder=folder,cache_hash_check=True,re_extract=True)
 
 
 if __name__ == "__main__":
