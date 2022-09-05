@@ -58,22 +58,28 @@ def download_from_url(url, fname):
             bar.update(size)
 
 
+def get_url_content(url: str) -> str:
+    req = requests.get(url)
+    return req.content.decode('utf-8')
+
 class Dataset():
     '''数据集文件类，用来下载和管理数据集'''
 
-    def __init__(self, basic_config_file_path):
-        '''需要配置文件的路径'''
+    def __init__(self, basic_config):
+        '''需要配置文件的路径或解析后的字典'''
+        if not isinstance(basic_config, dict):
+            assert os.path.exists(basic_config), "配置文件不存在"
+            with open(basic_config, encoding='utf8') as f:
+                self.conf = toml.load(f)
+        else:
+            self.conf = basic_config
         try:
-            with open(basic_config_file_path, encoding='utf8') as conf_file:
-                self.conf = toml.load(conf_file)
-                self.dataset_path = self.conf['local_dataset_path']
-                os.makedirs(self.dataset_path, exist_ok=True)
-                with open(self.conf['dataset_config'], encoding='utf8') as dataset_conf_file:
-                    self.dataset_conf = toml.load(dataset_conf_file)
-        except IOError as e:
-            raise Exception(f'打开配置文件出错：{e}')
+            self.dataset_path = self.conf['local_dataset_path']
+            os.makedirs(self.dataset_path, exist_ok=True)
+            get_url_content
+            self.dataset_conf = toml.loads(get_url_content(self.conf['dataset_config']))
         except KeyError as e:
-            raise Exception(f'配置文件中缺少键值：{e}')
+            raise Exception(f'基础配置文件中缺少键值：{e}')
 
     def download_extract(self, name: str, folder: str = None, re_extract: bool = False) -> str:
         """下载并解压zip/tar文件
@@ -84,7 +90,7 @@ class Dataset():
             sha1_hash = self.dataset_conf[name]['sha1_hash']
             cache_dir = self.conf['local_dataset_cache_path']
         except KeyError as e:
-            raise Exception(f'配置文件中缺少键值：{e}')
+            raise Exception(f'数据库配置文件中缺少键值：{e}')
         os.makedirs(cache_dir, exist_ok=True)
         file_full_path = os.path.join(cache_dir, url.split('/')[-1])
         if os.path.exists(file_full_path) and get_file_sha1(file_full_path) == sha1_hash:
@@ -92,7 +98,7 @@ class Dataset():
         else:
             print(f'正在从{url}下载到{file_full_path}...')
             download_from_url(url, file_full_path)
-            re_extract=True #需要重新下载的都需要重新解压
+            re_extract = True  #需要重新下载的都需要重新解压
         #获得压缩包路径
         _, file_full_name = os.path.split(file_full_path)
         file_name, file_ext = os.path.splitext(file_full_name)
