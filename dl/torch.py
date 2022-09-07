@@ -1,3 +1,4 @@
+import os
 import torch, torchvision
 import time
 import numpy as np
@@ -98,3 +99,9 @@ def get_first_feature(dataset: torch.utils.data.Dataset):
     iter = torch.utils.data.DataLoader(dataset)
     for feature, label in iter:
         return feature
+
+def save_state_dict(net,file_path):
+    '''保存网络权重，如果目标路径的文件夹不存在就自动创建'''
+    file_dir=os.path.dirname(file_path)
+    os.makedirs(file_dir,exist_ok=True)
+    torch.save(net.state_dict(), file_path)
