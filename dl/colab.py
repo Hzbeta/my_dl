@@ -13,3 +13,9 @@ def is_in_colab() -> bool:
 def config(gist_hash):
     conf=file.get_url_content(f"https://gist.githubusercontent.com/Hzbeta/{gist_hash}/raw/colab.toml")
     return toml.loads(conf)
+
+def init():
+    nvidia_smi = "".join(os.popen('nvidia-smi').readlines())
+    print(nvidia_smi)
+    from google.colab import drive  # type: ignore 忽略pylance错误
+    drive.mount('/content/drive')
