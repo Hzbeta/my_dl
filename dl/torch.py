@@ -2,6 +2,7 @@ import os
 import torch, torchvision
 import time
 import numpy as np
+from tqdm import tqdm
 
 argmax = lambda x, *args, **kwargs: x.argmax(*args, **kwargs)
 astype = lambda x, *args, **kwargs: x.type(*args, **kwargs)
@@ -105,3 +106,16 @@ def save_state_dict(net,file_path):
     file_dir=os.path.dirname(file_path)
     os.makedirs(file_dir,exist_ok=True)
     torch.save(net.state_dict(), file_path)
+
+
+def evaluate_accuracy(net, data_iter):
+    '''计算acc'''
+    all_nums = len(data_iter)
+    right_nums = 0
+    for feature, label in tqdm(data_iter):
+        #网络预测
+        outputs = net(feature)
+        _, predicted = torch.max(outputs, 1)
+        if predicted[0] == label[0]:
+            right_nums += 1
+    return right_nums/all_nums
