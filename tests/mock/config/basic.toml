@@ -1,0 +1,6 @@
+# 数据集配置文件地址
+dataset_config='.\tests\mock\config\dataset.toml'
+# 本地数据集存储位置
+local_dataset_path='.\tests\mock\data'
+#本地临时文件夹位置
+local_dataset_cache_path='.\tests\mock\data\cache'

@@ -75,8 +75,12 @@ class Dataset():
         try:
             self.dataset_path = self.conf['local_dataset_path']
             os.makedirs(self.dataset_path, exist_ok=True)
-            get_url_content
-            self.dataset_conf = toml.loads(get_url_content(self.conf['dataset_config']))
+            #如果在数据集配置本地就打开本地的，否则打开网络上的
+            if os.path.exists(self.conf['dataset_config']):
+                with open(self.conf['dataset_config'],encoding='utf8') as f:
+                    self.dataset_conf=toml.load(f)
+            else:
+                self.dataset_conf = toml.loads(get_url_content(self.conf['dataset_config']))
         except KeyError as e:
             raise Exception(f'基础配置文件中缺少键值：{e}')
 
@@ -87,6 +91,10 @@ class Dataset():
         try:
             url = self.dataset_conf[name]['url']
             sha1_hash = self.dataset_conf[name]['sha1_hash']
+            if 'password' in self.dataset_conf[name].keys():
+                password = self.dataset_conf[name]['password']
+            else:
+                password = None
             cache_dir = self.conf['local_dataset_cache_path']
         except KeyError as e:
             raise Exception(f'数据库配置文件中缺少键值：{e}')
@@ -114,8 +122,8 @@ class Dataset():
                 assert False, '只有zip文件可以被解压缩'
             print(f"正在解压到{extract_dir}...")
             for member in tqdm(fp.infolist(), desc='解压中'):
-                fp.extract(member, extract_dir)
-            # fp.extractall(extract_dir)
+                fp.extract(member, extract_dir,pwd=password.encode())
+            fp.close()
         return os.path.join(extract_dir, folder) if folder else extract_dir
 
     def update(self,name: str, folder: str = None):

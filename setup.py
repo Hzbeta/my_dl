@@ -29,6 +29,6 @@ setup(
     author_email='ihzbeta@outlook.com',
     url='https://github.com/Hzbeta/my_dl',
     description='My deep learning python toolkit',
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests']),
     install_requires=requirements,
 )

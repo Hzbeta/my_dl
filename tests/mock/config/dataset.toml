@@ -1,0 +1,5 @@
+# 特定数据集的参数，包括url和hash
+[test]
+url="https://github.com/Hzbeta/my_dl/raw/main/tests/mock/test.zip"
+sha1_hash="37ce4a06091f4cabd161eb05dd58a434ca281b85"
+password="test"

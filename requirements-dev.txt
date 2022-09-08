@@ -1,0 +1,17 @@
+fire
+matplotlib
+numpy
+opencv-python
+toml
+tqdm
+yapf
+torchsampler
+ipykernel
+ipywidgets
+torchkeras
+python-docx
+jupyter
+pandas
+requests
+matplotlib_inline
+rich
