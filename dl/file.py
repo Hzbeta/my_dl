@@ -11,7 +11,7 @@ from tqdm import tqdm
 from rich import progress
 
 
-def get_vaild_filename(dir_path: str, file_ext: str) -> str:
+def get_vaild_filepath(dir_path: str, file_ext: str) -> str:
     '''输入一个目录路径和后缀名，返回一个随机的合法的文件路径
     参数：
         dir_path:目录路径
