@@ -10,10 +10,6 @@ def is_in_colab() -> bool:
     else:
         return False
 
-def config(gist_hash):
-    conf=file.get_url_content(f"https://gist.githubusercontent.com/Hzbeta/{gist_hash}/raw/colab.toml")
-    return toml.loads(conf)
-
 def init():
     nvidia_smi = "".join(os.popen('nvidia-smi').readlines())
     print(nvidia_smi)

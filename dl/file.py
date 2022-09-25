@@ -1,7 +1,7 @@
 '''
 存放数据库初始化和文件相关的工具函数
 '''
-import os, hashlib, requests
+import os, hashlib, requests, re
 import shutil
 import uuid
 import zipfile
@@ -20,7 +20,7 @@ def get_vaild_filename(dir_path: str, file_ext: str, return_path: bool = False) 
 
     Returns:
         str: 文件名或完整路径
-    """    
+    """
     assert os.path.exists(dir_path), '目录不存在'
     filename = str(uuid.uuid4())
     while (os.path.exists(os.path.join(dir_path, filename + file_ext))):
@@ -62,6 +62,7 @@ def download_from_url(url, fname):
 
 
 def get_url_content(url: str) -> str:
+    assert re.match(r'^https?:/{2}\w.+$', url),'URL不合法'
     req = requests.get(url)
     return req.content.decode('utf-8')
 
@@ -69,14 +70,25 @@ def get_url_content(url: str) -> str:
 class Dataset():
     '''数据集文件类，用来下载和管理数据集'''
 
-    def __init__(self, basic_config):
-        '''需要配置文件的路径或解析后的字典'''
-        if not isinstance(basic_config, dict):
-            assert os.path.exists(basic_config), "配置文件不存在"
+    def __init__(self, basic_config:str):
+        """初始化数据集类
+
+        Args:
+            basic_config (str): 配置文件路径，可以是本地地址或URL地址
+
+        Raises:
+            Exception: 配置文件内容出错
+        """
+        # 尝试从本地或网络中打开配置
+        if os.path.exists(basic_config):
             with open(basic_config, encoding='utf8') as f:
                 self.conf = toml.load(f)
         else:
-            self.conf = basic_config
+            try:
+                self.conf = toml.loads(get_url_content(basic_config))
+            except Exception as e:
+                raise Exception('配置文件不存在或无法打开')
+
         try:
             self.dataset_path = self.conf['local_dataset_path']
             os.makedirs(self.dataset_path, exist_ok=True)
