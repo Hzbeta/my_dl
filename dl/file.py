@@ -10,21 +10,25 @@ import fire
 from tqdm import tqdm
 from rich import progress
 
+def get_vaild_filename(dir_path: str, file_ext: str, return_path: bool = False) -> str:
+    """输入一个目录路径和后缀名，返回一个随机的合法的文件路径
 
-def get_vaild_filepath(dir_path: str, file_ext: str) -> str:
-    '''输入一个目录路径和后缀名，返回一个随机的合法的文件路径
-    参数：
-        dir_path:目录路径
-        file_ext:文件后缀名
-    返回：
-        合法的文件路径
-    '''
+    Args:
+        dir_path (str): 目录路径
+        file_ext (str): 文件后缀名
+        return_path (bool, optional): 返回的是否是完整路径，默认只返回文件名. Defaults to False.
+
+    Returns:
+        str: 文件名或完整路径
+    """    
     assert os.path.exists(dir_path), '目录不存在'
     filename = str(uuid.uuid4())
     while (os.path.exists(os.path.join(dir_path, filename + file_ext))):
         filename = str(uuid.uuid4())
-    return os.path.join(dir_path, filename + file_ext)
-
+    if return_path:
+        return os.path.join(dir_path, filename + file_ext)
+    else:
+        return filename
 
 def get_file_sha1(file_path: str) -> str:
     '''输入文件路径，返回sha1值
@@ -61,6 +65,7 @@ def get_url_content(url: str) -> str:
     req = requests.get(url)
     return req.content.decode('utf-8')
 
+
 class Dataset():
     '''数据集文件类，用来下载和管理数据集'''
 
@@ -77,14 +82,14 @@ class Dataset():
             os.makedirs(self.dataset_path, exist_ok=True)
             #如果在数据集配置本地就打开本地的，否则打开网络上的
             if os.path.exists(self.conf['dataset_config']):
-                with open(self.conf['dataset_config'],encoding='utf8') as f:
-                    self.dataset_conf=toml.load(f)
+                with open(self.conf['dataset_config'], encoding='utf8') as f:
+                    self.dataset_conf = toml.load(f)
             else:
                 self.dataset_conf = toml.loads(get_url_content(self.conf['dataset_config']))
         except KeyError as e:
             raise Exception(f'基础配置文件中缺少键值：{e}')
 
-    def download_extract(self, name: str,cache_hash_check=False, folder: str = None, re_extract: bool = False) -> str:
+    def download_extract(self, name: str, cache_hash_check=False, folder: str = None, re_extract: bool = False) -> str:
         """下载并解压zip/tar文件
             指定folder则返回指定子目录
         """
@@ -122,12 +127,12 @@ class Dataset():
                 assert False, '只有zip文件可以被解压缩'
             print(f"正在解压到{extract_dir}...")
             for member in tqdm(fp.infolist(), desc='解压中'):
-                fp.extract(member, extract_dir,pwd=password.encode())
+                fp.extract(member, extract_dir, pwd=password.encode())
             fp.close()
         return os.path.join(extract_dir, folder) if folder else extract_dir
 
-    def update(self,name: str, folder: str = None):
-        return self.download_extract(name, folder=folder,cache_hash_check=True,re_extract=True)
+    def update(self, name: str, folder: str = None):
+        return self.download_extract(name, folder=folder, cache_hash_check=True, re_extract=True)
 
 
 if __name__ == "__main__":
