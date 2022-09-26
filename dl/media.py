@@ -20,7 +20,8 @@ def resize_imgs(base_img, other_imgs:list, method=cv2.INTER_AREA):
         img_list: 处理后的图像列表，顺序不变
     """
     for i,img in enumerate(other_imgs):
-        other_imgs[i] = cv2.resize(img, (base_img.shape[1], base_img.shape[0]), interpolation=method)
+        if not img.shape==base_img.shape:
+            other_imgs[i] = cv2.resize(img, (base_img.shape[1], base_img.shape[0]), interpolation=method)
     return other_imgs
 
 def get_imgs_diff_score(base_img,other_imgs:list):
