@@ -41,3 +41,8 @@ def get_imgs_diff_score(base_img,other_imgs:list):
         similarity = 1 - errorL2 / (base_img.shape[0] * base_img.shape[1])
         similarity_list.append(similarity)
     return similarity_list  #从0到1，相似度升高，1代表完全相同
+
+
+def get_video_frame_nums(video_path) -> int:
+    cap = cv2.VideoCapture(video_path)
+    return int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
