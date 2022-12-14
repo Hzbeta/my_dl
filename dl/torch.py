@@ -138,3 +138,6 @@ class AverageMeter(object):
     #根据索引获得平均值，不指定索引则返回所有平均值
     def get_mean(self, start=None, end=None):
         return np.array([mean(list(self.data[i])[start:end]) for i in range(len(self.data))])
+    
+    def len(self):
+        return len(self.data[0])
