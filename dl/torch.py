@@ -3,6 +3,8 @@ import torch, torchvision
 import time
 import numpy as np
 from tqdm import tqdm
+from collections import deque
+from statistics import mean
 
 argmax = lambda x, *args, **kwargs: x.argmax(*args, **kwargs)
 astype = lambda x, *args, **kwargs: x.type(*args, **kwargs)
@@ -119,3 +121,20 @@ def evaluate_accuracy(net, data_iter):
         if predicted[0] == label[0]:
             right_nums += 1
     return right_nums/all_nums
+
+
+class AverageMeter(object):
+    """Computes and stores the average"""
+
+    #num:需要计算平均值的数据的个数，maxlen:队列最大长度
+    def __init__(self, num, maxlen):
+        self.data = [deque([], maxlen=maxlen) for _ in range(num)]
+
+    #添加数据
+    def append(self, *args):
+        for i in range(len(args)):
+            self.data[i].append(args[i])
+
+    #根据索引获得平均值，不指定索引则返回所有平均值
+    def get_mean(self, start=None, end=None):
+        return np.array([mean(list(self.data[i])[start:end]) for i in range(len(self.data))])
