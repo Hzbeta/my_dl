@@ -8,6 +8,7 @@ def getLogger(name, log_dir, level=logging.DEBUG, fmt_str='[%(asctime)s][%(level
     sh = logging.StreamHandler()
     sh.setFormatter(fmt)
     sh.setLevel(level)
+    os.makedirs(log_dir, exist_ok=True)
     #日志文件名为当前时间
     log_file_name = time.strftime('%Y-%m-%d_%H-%M-%S', time.localtime(time.time())) + '.log'
     log_file_path = os.path.join(log_dir, log_file_name)
