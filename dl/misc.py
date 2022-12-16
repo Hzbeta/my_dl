@@ -1,4 +1,5 @@
-import logging, os, time
+import logging, os
+from datetime import datetime
 
 
 def get_logger(name,
@@ -28,4 +29,5 @@ def get_logger(name,
 
 
 def get_time():
-    return time.strftime('%Y-%m-%d_%H:%M:%S', time.localtime(time.time()))
+    #获取当前日期和时间，包含毫秒
+    return datetime.utcnow().strftime('%Y-%m-%d_%H:%M:%S:%f')[:-3]
