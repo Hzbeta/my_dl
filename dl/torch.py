@@ -103,10 +103,10 @@ def get_first_feature(dataset: torch.utils.data.Dataset):
     for feature, label in iter:
         return feature
 
-def save_state_dict(net,dir,exp_time):
+def save_state_dict(net,dir,name):
     '''保存网络权重，如果目标文件夹不存在就自动创建'''
     os.makedirs(dir,exist_ok=True)
-    file_path=os.path.join(dir,exp_time+'.pth')
+    file_path=os.path.join(dir,name+'.pth')
     torch.save(net.state_dict(), file_path)
 
 
