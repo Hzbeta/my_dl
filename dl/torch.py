@@ -144,66 +144,66 @@ class AverageMeter(object):
         return len(self.data[0])
     
     
-def get_model(name,pretrained=True):
+def get_model(name,pretrained=True,**kwargs):
     '''根据名字获得模型'''
     match name:
         case "GoogLeNet":
-            return models.googlenet(weights=models.GoogLeNet_Weights.DEFAULT if pretrained else None)
+            return models.googlenet(weights=models.GoogLeNet_Weights.DEFAULT if pretrained else None, **kwargs)
         case "Inception_V3":
-            return models.inception_v3(weights=models.Inception_V3_Weights.DEFAULT if pretrained else None)
+            return models.inception_v3(weights=models.Inception_V3_Weights.DEFAULT if pretrained else None, **kwargs)
         case "ConvNeXt_Tiny":
-            return models.convnext_tiny(weights=models.ConvNeXt_Tiny_Weights.DEFAULT if pretrained else None)
+            return models.convnext_tiny(weights=models.ConvNeXt_Tiny_Weights.DEFAULT if pretrained else None, **kwargs)
         case "ConvNeXt_Base":
-            return models.convnext_base(weights=models.ConvNeXt_Base_Weights.DEFAULT if pretrained else None)
+            return models.convnext_base(weights=models.ConvNeXt_Base_Weights.DEFAULT if pretrained else None, **kwargs)
         case "DenseNet121":
-            return models.densenet121(weights=models.DenseNet121_Weights.DEFAULT if pretrained else None)
+            return models.densenet121(weights=models.DenseNet121_Weights.DEFAULT if pretrained else None, **kwargs)
         case "DenseNet169":
-            return models.densenet169(weights=models.DenseNet169_Weights.DEFAULT if pretrained else None)
+            return models.densenet169(weights=models.DenseNet169_Weights.DEFAULT if pretrained else None, **kwargs)
         case "EfficientNet_V2_L":
-            return models.efficientnet_v2_l(weights=models.EfficientNet_V2_L_Weights.DEFAULT if pretrained else None)
+            return models.efficientnet_v2_l(weights=models.EfficientNet_V2_L_Weights.DEFAULT if pretrained else None, **kwargs)
         case "EfficientNet_V2_M":
-            return models.efficientnet_v2_m(weights=models.EfficientNet_V2_M_Weights.DEFAULT if pretrained else None)
+            return models.efficientnet_v2_m(weights=models.EfficientNet_V2_M_Weights.DEFAULT if pretrained else None, **kwargs)
         case "MNASNet1_0":
-            return models.mnasnet1_0(weights=models.MNASNet1_0_Weights.DEFAULT if pretrained else None)
+            return models.mnasnet1_0(weights=models.MNASNet1_0_Weights.DEFAULT if pretrained else None, **kwargs)
         case "MNASNet1_3":
-            return models.mnasnet1_3(weights=models.MNASNet1_3_Weights.DEFAULT if pretrained else None)
+            return models.mnasnet1_3(weights=models.MNASNet1_3_Weights.DEFAULT if pretrained else None, **kwargs)
         case "MaxVit_T":
-            return models.maxvit_t(weights=models.MaxVit_T_Weights.DEFAULT if pretrained else None)
+            return models.maxvit_t(weights=models.MaxVit_T_Weights.DEFAULT if pretrained else None, **kwargs)
         case "MobileNet_V3_Small":
-            return models.mobilenet_v3_small(weights=models.MobileNet_V3_Small_Weights.DEFAULT if pretrained else None)
+            return models.mobilenet_v3_small(weights=models.MobileNet_V3_Small_Weights.DEFAULT if pretrained else None, **kwargs)
         case "MobileNet_V3_Large":
-            return models.mobilenet_v3_large(weights=models.MobileNet_V3_Large_Weights.DEFAULT if pretrained else None)
+            return models.mobilenet_v3_large(weights=models.MobileNet_V3_Large_Weights.DEFAULT if pretrained else None, **kwargs)
         case "RegNet_X_400MF":
-            return models.regnet_x_400mf(weights=models.RegNet_X_400MF_Weights.DEFAULT if pretrained else None)
+            return models.regnet_x_400mf(weights=models.RegNet_X_400MF_Weights.DEFAULT if pretrained else None, **kwargs)
         case "RegNet_X_1_6GF":
-            return models.regnet_x_1_6gf(weights=models.RegNet_X_1_6GF_Weights.DEFAULT if pretrained else None)
+            return models.regnet_x_1_6gf(weights=models.RegNet_X_1_6GF_Weights.DEFAULT if pretrained else None, **kwargs)
         case "RegNet_Y_400MF":
-            return models.regnet_y_400mf(weights=models.RegNet_Y_400MF_Weights.DEFAULT if pretrained else None)
+            return models.regnet_y_400mf(weights=models.RegNet_Y_400MF_Weights.DEFAULT if pretrained else None, **kwargs)
         case "RegNet_Y_1_6GF":
-            return models.regnet_y_1_6gf(weights=models.RegNet_Y_1_6GF_Weights.DEFAULT if pretrained else None)
+            return models.regnet_y_1_6gf(weights=models.RegNet_Y_1_6GF_Weights.DEFAULT if pretrained else None, **kwargs)
         case "ResNet18":
-            return models.resnet18(weights=models.ResNet18_Weights.DEFAULT if pretrained else None)
+            return models.resnet18(weights=models.ResNet18_Weights.DEFAULT if pretrained else None, **kwargs)
         case "ResNet50":
-            return models.resnet50(weights=models.ResNet50_Weights.DEFAULT if pretrained else None)
+            return models.resnet50(weights=models.ResNet50_Weights.DEFAULT if pretrained else None, **kwargs)
         case "ShuffleNet_V2_X1_5":
-            return models.shufflenet_v2_x1_5(weights=models.ShuffleNet_V2_X1_5_Weights.DEFAULT if pretrained else None)
+            return models.shufflenet_v2_x1_5(weights=models.ShuffleNet_V2_X1_5_Weights.DEFAULT if pretrained else None, **kwargs)
         case "ShuffleNet_V2_X2_0":
-            return models.shufflenet_v2_x2_0(weights=models.ShuffleNet_V2_X2_0_Weights.DEFAULT if pretrained else None)
+            return models.shufflenet_v2_x2_0(weights=models.ShuffleNet_V2_X2_0_Weights.DEFAULT if pretrained else None, **kwargs)
         case "SqueezeNet1_1":
-            return models.squeezenet1_1(weights=models.SqueezeNet1_1_Weights.DEFAULT if pretrained else None)
+            return models.squeezenet1_1(weights=models.SqueezeNet1_1_Weights.DEFAULT if pretrained else None, **kwargs)
         case "Swin_V2_T":
-            return models.swin_v2_t(weights=models.Swin_V2_T_Weights.DEFAULT if pretrained else None)
+            return models.swin_v2_t(weights=models.Swin_V2_T_Weights.DEFAULT if pretrained else None, **kwargs)
         case "Swin_V2_S":
-            return models.swin_v2_s(weights=models.Swin_V2_S_Weights.DEFAULT if pretrained else None)
+            return models.swin_v2_s(weights=models.Swin_V2_S_Weights.DEFAULT if pretrained else None, **kwargs)
         case "VGG11_BN":
-            return models.vgg11_bn(weights=models.VGG11_BN_Weights.DEFAULT if pretrained else None)
+            return models.vgg11_bn(weights=models.VGG11_BN_Weights.DEFAULT if pretrained else None, **kwargs)
         case "VGG16_BN":
-            return models.vgg16_bn(weights=models.VGG16_BN_Weights.DEFAULT if pretrained else None)
+            return models.vgg16_bn(weights=models.VGG16_BN_Weights.DEFAULT if pretrained else None, **kwargs)
         case "ViT_B_16":
-            return models.vit_b_16(weights=models.ViT_B_16_Weights.DEFAULT if pretrained else None)
+            return models.vit_b_16(weights=models.ViT_B_16_Weights.DEFAULT if pretrained else None, **kwargs)
         case "ViT_L_16":
-            return models.vit_l_16(weights=models.ViT_L_16_Weights.DEFAULT if pretrained else None)
+            return models.vit_l_16(weights=models.ViT_L_16_Weights.DEFAULT if pretrained else None, **kwargs)
         case "Wide_ResNet50_2":
-            return models.wide_resnet50_2(weights=models.Wide_ResNet50_2_Weights.DEFAULT if pretrained else None)
+            return models.wide_resnet50_2(weights=models.Wide_ResNet50_2_Weights.DEFAULT if pretrained else None, **kwargs)
         case _:
             assert False, "Unknown model name: {}".format(name)
