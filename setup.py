@@ -24,7 +24,7 @@ setup(
     name='dl',
     setup_requires=['setuptools_scm'],
     use_scm_version=True,
-    python_requires='>=3.7',
+    python_requires='>=3.10',
     author='Hzbeta',
     author_email='ihzbeta@outlook.com',
     url='https://github.com/Hzbeta/my_dl',
