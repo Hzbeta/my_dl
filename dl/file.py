@@ -15,7 +15,7 @@ def get_vaild_filename(dir_path: str, file_ext: str, return_path: bool = False) 
 
     Args:
         dir_path (str): 目录路径
-        file_ext (str): 文件后缀名
+        file_ext (str): 文件后缀名，如'.jpg'
         return_path (bool, optional): 返回的是否是完整路径，默认只返回文件名. Defaults to False.
 
     Returns:
