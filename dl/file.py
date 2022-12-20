@@ -146,6 +146,9 @@ class Dataset():
     def update(self, name: str, folder: str = None):
         return self.download_extract(name, folder=folder, cache_hash_check=True, re_extract=True)
 
+    def get_base_path(self):
+        return self.dataset_path
+
 
 if __name__ == "__main__":
     '''使工具函数可以直接由命令行调用'''
