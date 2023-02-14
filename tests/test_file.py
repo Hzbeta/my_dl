@@ -26,17 +26,7 @@ class TestFile(unittest.TestCase):
             self.assertDir(correct_subdir_struct, pjoin(base_path, subdir_name))
         return True
 
-    def test_Dataset(self):
-
-        #清理磁盘上的所有测试数据集
-        conf_path='./tests/mock/config/basic.toml'
-        with open(conf_path, encoding='utf8') as f:
-            conf = toml.load(f)
-        dataset_path = conf['local_dataset_path']
-        cache_path = conf['local_dataset_cache_path']
-        shutil.rmtree(dataset_path, ignore_errors=True)
-        shutil.rmtree(cache_path, ignore_errors=True)
-
+    def dataset_fulltest(self,conf_path,dataset_path,cache_path):
         #开始测试
         dataset = file.Dataset(conf_path)
         test_data_path = dataset.download_extract('test')
@@ -66,6 +56,26 @@ class TestFile(unittest.TestCase):
             ],
         }
         self.assertDir(correct_dir_struct,test_data_path)
+
+    def test_Dataset(self):
+
+        conf_path='./tests/mock/config/basic.toml'
+        with open(conf_path, encoding='utf8') as f:
+            conf = toml.load(f)
+        dataset_path = conf['local_dataset_path']
+        cache_path = conf['local_dataset_cache_path']
+        #清理磁盘上的所有测试数据集
+        shutil.rmtree(dataset_path, ignore_errors=True)
+        shutil.rmtree(cache_path, ignore_errors=True)
+
+        # 进行第一次测试，全新环境
+        print('test_Dataset: first test, new environment')
+        self.dataset_fulltest(conf_path,dataset_path,cache_path)
+        
+        # 进行第二次测试，已经下载过的环境
+        print('test_Dataset: second test, already downloaded environment')
+        self.dataset_fulltest(conf_path,dataset_path,cache_path)
+
 
 if __name__ == '__main__':
     unittest.main()

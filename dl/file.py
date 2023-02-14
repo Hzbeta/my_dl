@@ -88,10 +88,12 @@ class Dataset():
                 self.conf = toml.loads(get_url_content(basic_config))
             except Exception as e:
                 raise Exception('配置文件不存在或无法打开')
+        self.dataset_path = self.conf['local_dataset_path']
+        os.makedirs(self.dataset_path, exist_ok=True)
 
+    def load_dataset_config(self):
+        '''加载数据集配置文件'''
         try:
-            self.dataset_path = self.conf['local_dataset_path']
-            os.makedirs(self.dataset_path, exist_ok=True)
             #如果在数据集配置本地就打开本地的，否则打开网络上的
             if os.path.exists(self.conf['dataset_config']):
                 with open(self.conf['dataset_config'], encoding='utf8') as f:
@@ -105,42 +107,45 @@ class Dataset():
         """下载并解压zip/tar文件
             指定folder则返回指定子目录
         """
-        try:
-            url = self.dataset_conf[name]['url']
-            sha1_hash = self.dataset_conf[name]['sha1_hash']
-            if 'password' in self.dataset_conf[name].keys():
-                password = self.dataset_conf[name]['password']
-            else:
-                password = None
-            cache_dir = self.conf['local_dataset_cache_path']
-        except KeyError as e:
-            raise Exception(f'数据库配置文件中缺少键值：{e}')
-        os.makedirs(cache_dir, exist_ok=True)
-        file_full_path = os.path.join(cache_dir, url.split('/')[-1])
-        if os.path.exists(file_full_path) and (not cache_hash_check or get_file_sha1(file_full_path) == sha1_hash):
-            pass  # 命中缓存
-        else:
-            print(f'正在从{url}下载到{file_full_path}...')
-            download_from_url(url, file_full_path)
-            re_extract = True  #需要重新下载的都需要重新解压
-        #获得压缩包路径
-        _, file_full_name = os.path.split(file_full_path)
-        file_name, file_ext = os.path.splitext(file_full_name)
         #保存路径为数据集目录+压缩包名称
-        extract_dir = os.path.join(self.dataset_path, file_name)
-        #需要重新解压时，删除现有文件
-        if re_extract and os.path.exists(extract_dir):
-            shutil.rmtree(extract_dir, ignore_errors=True)
-        #解压
-        if not os.path.exists(extract_dir):
-            if file_ext == '.zip':
-                fp = zipfile.ZipFile(file_full_path, 'r')
+        extract_dir = os.path.join(self.dataset_path, name)
+        # 只有当文件夹不存在，需要hash检查，需要重新解压时才会读取数据集配置文件
+        if (not os.path.exists(extract_dir)) or cache_hash_check or re_extract:
+            self.load_dataset_config()
+            try:
+                url = self.dataset_conf[name]['url']
+                sha1_hash = self.dataset_conf[name]['sha1_hash']
+                if 'password' in self.dataset_conf[name].keys():
+                    password = self.dataset_conf[name]['password']
+                else:
+                    password = None
+                cache_dir = self.conf['local_dataset_cache_path']
+            except KeyError as e:
+                raise Exception(f'数据库配置文件中缺少键值：{e}')
+            os.makedirs(cache_dir, exist_ok=True)
+            file_full_path = os.path.join(cache_dir, url.split('/')[-1])
+            if os.path.exists(file_full_path) and (not cache_hash_check or get_file_sha1(file_full_path) == sha1_hash):
+                pass  # 命中缓存
             else:
-                assert False, '只有zip文件可以被解压缩'
-            print(f"正在解压到{extract_dir}...")
-            for member in tqdm(fp.infolist(), desc='解压中'):
-                fp.extract(member, extract_dir, pwd=password.encode())
-            fp.close()
+                print(f'正在从{url}下载到{file_full_path}...')
+                download_from_url(url, file_full_path)
+                re_extract = True  #需要重新下载的都需要重新解压
+            #获得压缩包路径
+            _, file_full_name = os.path.split(file_full_path)
+            file_name, file_ext = os.path.splitext(file_full_name)
+            #需要重新解压时，删除现有文件
+            if re_extract and os.path.exists(extract_dir):
+                shutil.rmtree(extract_dir, ignore_errors=True)
+            #解压
+            if not os.path.exists(extract_dir):
+                if file_ext == '.zip':
+                    fp = zipfile.ZipFile(file_full_path, 'r')
+                else:
+                    assert False, '只有zip文件可以被解压缩'
+                print(f"正在解压到{extract_dir}...")
+                for member in tqdm(fp.infolist(), desc='解压中'):
+                    fp.extract(member, extract_dir, pwd=password.encode())
+                fp.close()
         return os.path.join(extract_dir, folder) if folder else extract_dir
 
     def update(self, name: str, folder: str = None):
