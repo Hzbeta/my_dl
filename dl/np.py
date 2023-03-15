@@ -1,6 +1,6 @@
 import numpy as np
 
-def np_append(a, b, axis):
+def append(a, b, axis):
     """Appends two arrays together and returns the result.
 
     If the first array is None, the second array is returned. Otherwise, the
