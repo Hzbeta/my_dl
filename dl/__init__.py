@@ -1,1 +1,1 @@
-from dl import file,torch,plt,media,colab,misc
+from dl import file,torch,plt,media,colab,misc,np
