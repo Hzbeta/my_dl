@@ -188,6 +188,7 @@ class EarlyStopping:
             if self.counter >= self.patience:
                 self.early_stop = True
         else:
+            self.early_stop = False
             self.is_decresing = True
             self.best_score = score
             self.save_checkpoint(val_loss, model)
