@@ -148,7 +148,7 @@ class AverageMeter(object):
 class EarlyStopping:
     """Early stops the training if validation loss doesn't improve after a given patience."""
 
-    def __init__(self, patience=7, verbose=False, delta=0, path='tmp.pth', trace_func=print):
+    def __init__(self, patience=7, verbose=False, delta=0, path='tmp.pth', trace_func=print, is_need_save=True):
         """
         Args:
             patience (int): How long to wait after last time validation loss improved.
@@ -172,6 +172,7 @@ class EarlyStopping:
         self.path = path
         self.trace_func = trace_func
         self.is_decresing = False
+        self.is_need_save = is_need_save
 
     def __call__(self, val_loss, model):
 
@@ -180,7 +181,8 @@ class EarlyStopping:
         if self.best_score is None:
             self.is_decresing = True
             self.best_score = score
-            self.save_checkpoint(val_loss, model)
+            if self.is_need_save:
+                self.save_checkpoint(val_loss, model)
         elif score < self.best_score + self.delta:
             self.is_decresing = False
             self.counter += 1
@@ -191,7 +193,8 @@ class EarlyStopping:
             self.early_stop = False
             self.is_decresing = True
             self.best_score = score
-            self.save_checkpoint(val_loss, model)
+            if self.is_need_save:
+                self.save_checkpoint(val_loss, model)
             self.counter = 0
 
     def save_checkpoint(self, val_loss, model):
